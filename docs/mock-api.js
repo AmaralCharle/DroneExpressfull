@@ -22,8 +22,12 @@
       if(/\/drones(\/|$)/.test(url)){
         return new Response(JSON.stringify(sampleDrones), { status: 200, headers: {'Content-Type':'application/json'} });
       }
-      // block failing external host to avoid DNS errors
+      // respond to GraphQL host with an empty data object to avoid null .data errors
       if(url.includes('bff.prod.coingoback.com')){
+        // if GraphQL endpoint
+        if(url.includes('/graphql')){
+          return new Response(JSON.stringify({ data: {} }), { status: 200, headers: {'Content-Type':'application/json'} });
+        }
         return new Response(null, { status: 204 });
       }
     }catch(e){
